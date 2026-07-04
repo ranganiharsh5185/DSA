@@ -148,17 +148,26 @@ void delete_last()
 void delete_specified_pos()
 {
     struct node *save, *pred;
-    int x;
+    int x,count=0;
     printf("Enter the data to delete: ");
     scanf("%d", &x);
     save=FIRST;
     while (save->info != x)
     {
+        count++;
         pred = save;
         save = save->link;
     }
-    pred->link = save->link;
-    free(save);
+     if(count==0){
+        FIRST=save->link;
+        free(save);
+        return;
+    }
+    else{
+
+        pred->link = save->link;
+        free(save);
+    }
 }
 void count_node()
 {
