@@ -1,87 +1,137 @@
-#include "stdio.h"
-#include "stdlib.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 struct node
 {
     int info;
     struct node *link;
 };
+
 struct node *FIRST = NULL;
 struct node *SECOND = NULL;
+
 void insert_at_last();
 void linked_copy();
 void display();
 
-void main()
+int main()
 {
-    int ch = 0;
+    int ch;
 
     do
     {
-        printf("1. to enter node in linked list\n");
-        printf("2. to exit\n");
+        printf("\n1. Insert node\n");
+        printf("2. Exit\n");
+        printf("Enter your choice: ");
         scanf("%d", &ch);
-        
-        if (ch == 1)
+
+        switch (ch)
+        {
+        case 1:
             insert_at_last();
+            break;
+
+        case 2:
+            break;
+
+        default:
+            printf("Invalid choice!\n");
+        }
 
     } while (ch != 2);
-  
-    reverse_linked();
+
+    linked_copy();
+
+    printf("\nCopied Linked List:\n");
     display();
+
+    return 0;
 }
+
 void insert_at_last()
 {
-    struct node *newNode, *save;
+    struct node *newNode, *temp;
+
     newNode = (struct node *)malloc(sizeof(struct node));
-    printf("Enter the data: ");
+
+    if (newNode == NULL)
+    {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+
+    printf("Enter data: ");
     scanf("%d", &newNode->info);
+
     newNode->link = NULL;
+
     if (FIRST == NULL)
     {
         FIRST = newNode;
     }
     else
     {
-        save = FIRST;
+        temp = FIRST;
 
-        while (save->link != NULL)
+        while (temp->link != NULL)
         {
-            save = save->link;
+            temp = temp->link;
         }
-        save->link = newNode;
+
+        temp->link = newNode;
     }
 }
+
 void linked_copy()
 {
-    struct node *save, *newNode, *save2 = NULL;
-    save = FIRST;
-    while (save != NULL)
+    struct node *temp1, *temp2 = NULL, *newNode;
+
+    temp1 = FIRST;
+
+    while (temp1 != NULL)
     {
         newNode = (struct node *)malloc(sizeof(struct node));
-        newNode->info = save->info;
-        newNode->link = NULL;
-        
-        if (SECOND == NULL){
 
+        if (newNode == NULL)
+        {
+            printf("Memory allocation failed!\n");
+            return;
+        }
+
+        newNode->info = temp1->info;
+        newNode->link = NULL;
+
+        if (SECOND == NULL)
+        {
             SECOND = newNode;
         }
-        else{
-
-            save2->link = newNode;
+        else
+        {
+            temp2->link = newNode;
         }
-        
-        save2 = newNode;
-        save = save->link;
+
+        temp2 = newNode;
+        temp1 = temp1->link;
     }
 }
+
 void display()
 {
-    struct node *save;
+    struct node *temp;
 
-    save = SECOND;
-    while (save != NULL)
+    if (SECOND == NULL)
     {
-        printf("%d  %p \n", save->info, save);
-        save = save->link;
+        printf("Copied list is empty.\n");
+        return;
     }
+
+    temp = SECOND;
+
+    while (temp != NULL)
+    {
+        printf("%d -> ", temp->info);
+        temp = temp->link;
+    }
+
+    printf("NULL\n");
 }
