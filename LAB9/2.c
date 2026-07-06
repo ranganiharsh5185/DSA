@@ -6,7 +6,6 @@ struct node
     struct node *link;
 };
 struct node *FIRST = NULL;
-struct node *SECOND = NULL;
 void insert_at_last();
 void reverse_linked();
 void display();
@@ -51,21 +50,23 @@ void insert_at_last()
     }
 }
 void reverse_linked(){
-    struct node *save,save2,*newNode;
-    save = FIRST;
-    while(save!=NULL){
-        newNode = (struct node *)malloc(sizeof(struct node));
-        newNode->info = save->info;
-        newNode->link = SECOND;
-        SECOND = newNode;
-        save = save->link;
+    struct node *curr,*prev,*next;
+    curr = FIRST;
+    prev = NULL;
+    while(curr != NULL){
+        next = curr->link;
+        curr->link = prev;
+        prev = curr;
+        curr = next;
+
     }
 }
+
 void display()
 {
     struct node *save;
 
-    save = SECOND;
+    save = FIRST;
     while (save != NULL)
     {
         printf("%d  %p \n", save->info, save);
