@@ -3,7 +3,8 @@
 struct node
 {
     int info;
-    struct node *link;
+    struct node *rptr;
+    struct node *lptr;
 };
 struct node *FIRST = NULL;
 void insert_at_first();
@@ -45,112 +46,86 @@ void main()
         }
     }
 }
-void insert_at_first()
-{
-    struct node *newnode, *save;
+void insert_at_first(){
+struct node *newnode;
 
-    newnode = (struct node *)malloc(sizeof(struct node));
+newnode=(struct node*)malloc(sizeof(struct node));
+printf("enter data:");
+scanf("%d",&newnode->info);
+if(FIRST==NULL){
+    newnode->rptr=NULL;
+    newnode->lptr=NULL;
+    FIRST=newnode;
 
-    printf("Enter the data: ");
-    scanf("%d", &newnode->info);
-
-    if (FIRST == NULL)
-    {
-        FIRST = newnode;
-        newnode->link = FIRST;
-    }
-    else
-    {
-        save = FIRST;
-
-        while (save->link != FIRST)
-        {
-            save = save->link;
-        }
-        newnode->link = FIRST;
-        FIRST = newnode;
-        save->link = FIRST;
-    }
 }
-void delete_at_specified_position()
-{
-    struct node *save, *pred;
+else{
+    newnode->rptr=FIRST;
+    FIRST->lptr=newnode;
+    newnode->lptr=NULL;
+    FIRST=newnode;
+}
+}
+void display(){
+    struct node *save;
+    save=FIRST;
+    while(save!=NULL){
+        printf("%d<->",save->info);
+        save=save->rptr;
+    }
+    printf("\n");
+}
+void delete_at_specified_position(){
+    struct node *save,*pred;
     int x;
-    printf("Enter the data to delete:");
-    scanf("%d", &x);
-
-    if (FIRST->info == x)
-    {
-        if (FIRST->link == FIRST)
-        {
-            free(FIRST);
-            FIRST = NULL;
-            return;
-        }
-
-        save = FIRST;
-
-        while (save->link != FIRST)
-            save = save->link;
-
-        struct node *temp = FIRST;
-        FIRST = FIRST->link;
-        save->link = FIRST;
-        free(temp);
+    save=FIRST;
+printf("enter data to delete:");
+scanf("%d",&x);
+if(FIRST->info==x){
+    FIRST=save->rptr;
+    save->lptr=NULL;
+    free(save);
+    return;
+}
+while(save->info!=x){
+   
+    pred=save;
+save=save->rptr;
+}
+ if(save->rptr==NULL){
+        pred->rptr=NULL;
+        free(save);
         return;
     }
-    save = FIRST;
-    pred = NULL;
+pred->rptr=save->rptr;
+save->rptr->lptr=pred;
+free(save);
 
-    while (save->info != x)
-    {
-        pred = save;
-        save = save->link;
-    }
-    pred->link = save->link;
-    free(save);
 }
 void insert_at_last()
 {
     struct node *save, *newnode;
+
     newnode = (struct node *)malloc(sizeof(struct node));
 
-    printf("Enter the data: ");
+    printf("Enter data: ");
     scanf("%d", &newnode->info);
+
+    newnode->rptr = NULL;
 
     if (FIRST == NULL)
     {
         FIRST = newnode;
-        newnode->link = FIRST;
+        newnode->lptr = NULL;
+        return;
     }
-    else
-    {
-        save = FIRST;
 
-        while (save->link != FIRST)
-        {
-            save = save->link;
-        }
-        newnode->link = FIRST;
-        save->link = newnode;
-    }
-}
-
-void display()
-{
-    struct node *save;
     save = FIRST;
-    if (FIRST == NULL)
+
+    while (save->rptr != NULL)
     {
-        printf("List is empty\n");
+        save = save->rptr;
     }
-    else
-    {
-        do
-        {
-            printf("%d ", save->info);
-            save = save->link;
-        } while (save != FIRST);
-    }
-    printf("\n");
+
+    save->rptr = newnode;
+    newnode->lptr = save;
 }
